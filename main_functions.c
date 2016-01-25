@@ -1,12 +1,21 @@
+/*
+	The Gyroscope used is L3GD20H and no other sensors from the board.
+	Data acquisition is based off of BerryIMU library but cut to barebones for performance and storage.
+	Most of commented out lines of code are to be used if debugging is needed.
+	The servo Library is ServoBlaster.
+*/
+
+
 #include <stdint.h>
 #include "linux/i2c-dev.h"
 
-#define GYR_ADDRESS 0x6b
-#define OUT_GYR 0x28
+#define GYR_ADDRESS 0x6b //adress of the typo of gyroscope
+#define OUT_GYR 0x28 //location of OUT_X_L in datasheet
 
-#define CTRL_REG1 0x20
-#define  CTR1 0b00001111
-#define CTRL_REG4 23
+#define CTRL_REG1 0x20 //Set to 800Hz
+#define  CTR1 0b11001111 
+
+#define CTRL_REG4 23 //Set to 245dps
 #define CTR4 0b00110000
 
 int file;
@@ -54,7 +63,6 @@ void gyroSetup()
 	__u16 block[I2C_SMBUS_BLOCK_MAX];
 
         int res, bus,  size;
-
 
         char filename[20];
         sprintf(filename, "/dev/i2c-%d", 1);
