@@ -1,3 +1,8 @@
+/*	This is to be used on the Raspberry pi in order to control the Nozzle
+	The control algorith implemented is PID controller
+	DO NOT FORGET TO CHANGE Kp, Ki AND Kd
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
