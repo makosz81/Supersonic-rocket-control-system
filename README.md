@@ -10,6 +10,6 @@ The motor is a seperate project and so far the mechanism for vector thrusting be
 
 A PID control algorithm is implimented to determine the angle of the nozzle. Kp, Ki and Kd are constants that change with rocket properties. Now a mathematical model of the rocket has to be created in order to find stable values for them. 
 
-This is a project to create a low cost vector-thrusting for a supersonic rocket. As of 01/24/2016 only the Gyroscope and Servos working. Next step is to design and analyze the dynamics of the rocket and program it to respond accordingly.
+This is a project to create a low cost vector-thrusting for a supersonic rocket. As of 01/24/2016 only the Gyroscope and Servos working. Next step is to design and analyze the dynamics of the rocket and program it to respond accordingly. It's taking longer time than expected to get EOM of the rocket. CFD on it will be performed soon.
 
 Written by Maciej Makowski
