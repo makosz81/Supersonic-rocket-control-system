@@ -8,8 +8,12 @@ The Gyroscope used is L3GD20H can be found at: https://www.pololu.com/product/24
 
 The motor is a seperate project and so far the mechanism for vector thrusting being used is assumed to be somekind of gimball mechanism, very similar to a gear shifter in a car.
 
+[old]
 A PID control algorithm is implimented to determine the angle of the nozzle. Kp, Ki and Kd are constants that change with rocket properties. Now a mathematical model of the rocket has to be created in order to find stable values for them. 
+[old]
 
-This is a project to create a low cost vector-thrusting for a supersonic rocket. As of 02/24/2016 only the Gyroscope and Servos working. Next step is to design and analyze the dynamics of the rocket and program it to respond accordingly. It's taking longer time than expected to get EOM of the rocket. CFD on it will be performed soon. Small update, CFD is under way way, I have to make a lot of variations of it since the last two were shown to be incorrect due to certain reasons. I have reached the student edition limitation of the software and am petitioning to get access to the research grade one, hopefully my university allows it.
+I am looking at adaptive control scheme now since PID is not a valid option it seems. I will update the code once I am able to. At the moment I know nothing about adabtive control scheme so cant make the new code.
+
+This is a project to create a low cost vector-thrusting for a supersonic rocket. As of 02/24/2016 only the Gyroscope and Servos working. Initially I had an approach to use a classical controller but it is now abvious that it is not an option. It is extremely hard to mathematically model the rocket properly and even then the variables do change and will never reach calculated values. Therefore I am looking into adaptive control scheme now instead where the controller gains are calculated as the rocket is flying.
 
 Written by Maciej Makowski
