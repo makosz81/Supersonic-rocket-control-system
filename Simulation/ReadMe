@@ -1,0 +1,8 @@
+This is a Monte Carlo based simulation for rocket attitude. 
+To run the visualization you need the program Processing.
+To run the actual simulation and collect data you either need MATLAB or Octave.
+
+It currently works well but if some of the rocket parameters change it becomes extremely unstable. 
+With the projects purpose this is unaccaptable since it is to work under almost any type of rocket. 
+There needs to an appropiate adaptive control scheme implemented to finish this project. 
+At the moment I am not sure if it possible to create one that would still work under any rocket. 
