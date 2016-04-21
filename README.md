@@ -12,8 +12,10 @@ The motor is a seperate project and so far the mechanism for vector thrusting be
 A PID control algorithm is implimented to determine the angle of the nozzle. Kp, Ki and Kd are constants that change with rocket properties. Now a mathematical model of the rocket has to be created in order to find stable values for them. 
 [old]
 
-I am looking at adaptive control scheme now since PID is not a valid option it seems. I will update the code once I am able to. At the moment I know nothing about adabtive control scheme so cant make the new code.
+I am looking at adaptive control scheme now since PID is not a valid option it seems. I will update the code once I am able to. At the moment I know nothing about adabtive control scheme so can't make the new code. 
 
 This is a project to create a low cost vector-thrusting for a supersonic rocket. As of 02/24/2016 only the Gyroscope and Servos working. Initially I had an approach to use a classical controller but it is now abvious that it is not an option. It is extremely hard to mathematically model the rocket properly and even then the variables do change and will never reach calculated values. Therefore I am looking into adaptive control scheme now instead where the controller gains are calculated as the rocket is flying.
+
+I have included a matlab code for rocket attitude simulation and Processing code for visualization of it. The MATLAB code works with Octave also. It saves both the angle of the rocket with and without a control system. The current control system implemented is a PD controller. Notice that if some variables are changed the control system does not perform well. As stated before it is not a viable option but it was implemented to show that the simulation works properly.
 
 Written by Maciej Makowski
