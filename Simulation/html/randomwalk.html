@@ -1,0 +1,928 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Random Walk, Angle of the Rocket Simulation</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-04-17"><meta name="DC.source" content="randomwalk.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Random Walk, Angle of the Rocket Simulation</h1><!--introduction--><p>So this has to use a monte carlo based predictor-corrector method control System simulation in order to check the algorithm. The random parameters Should be moment of inertia, damping, spring constants and initial and continous disturbance. The only constantly randomly changing variable is the continous disturbance. The rest change constantly with the same variable which is chosen randomly.  The predictor-corrector algorithm is to keep the path as close to vertical as possible.</p><p>The variables are defined as:</p><p><img src="randomwalk_eq01319006133022114227.png" alt="$$h -$"> Step Size</p><p><img src="randomwalk_eq12253258444576495379.png" alt="$$n -$"> Iteration number</p><p><img src="randomwalk_eq15585648580548331644.png" alt="$$\theta -$"> Angle of the rocket</p><p><img src="randomwalk_eq04463658404988718944.png" alt="$$\theta^{int} -$"> Angle of the rocket used for integration</p><p><img src="randomwalk_eq03415121720759957915.png" alt="$$\dot{\theta} -$"> Angular velocity of the rocket</p><p><img src="randomwalk_eq14126890639817147617.png" alt="$$\dot{\theta}^{int} -$"> Angular Velocity used for integration</p><p><img src="randomwalk_eq02080156459579060622.png" alt="$$\ddot{\theta} -$"> Angular Acceleration of the rocket</p><p><img src="randomwalk_eq14303733719742520084.png" alt="$$I -$"> Moment of Inertia of the rocket</p><p><img src="randomwalk_eq17449245981936053951.png" alt="$$M -$"> Moment created due to motor casing angle</p><p><img src="randomwalk_eq12485862302114883147.png" alt="$$U -$"> Moment created due to disturbances</p><p><img src="randomwalk_eq01257304774415517227.png" alt="$$D -$"> Damping Coefficient</p><p><img src="randomwalk_eq12694355718954620107.png" alt="$$K -$"> Spring Coefficient</p><p><img src="randomwalk_eq09112519714629996024.png" alt="$$Superscipt a -$"> Variables that are used in control algorithm</p><p><img src="randomwalk_eq17118348308340645398.png" alt="$$Superscript p' -$"> First Prediction in Molines Method</p><p><img src="randomwalk_eq00784144336885603517.png" alt="$$Superscript p -$"> Improved Prediction</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Initialize</a></li><li><a href="#2">No control system implemented values</a></li><li><a href="#3">These Values are to be used for the control algorith only...............</a></li><li><a href="#4">Changes over time</a></li><li><a href="#5">Angular Acceleration</a></li><li><a href="#6">Angular Velocity</a></li><li><a href="#7">Angle of the rocket</a></li><li><a href="#8">Compare with no control system</a></li><li><a href="#9">Control Algorithm</a></li><li><a href="#10">Predictor-Corrector Miline's Method</a></li><li><a href="#15">Moment Created due to Nozzle</a></li><li><a href="#17">Plotting</a></li><li><a href="#18">Saving for graphical simulation</a></li></ul></div><h2>Initialize<a name="1"></a></h2><p>Some variables are randomized some are all zeros.</p><pre class="codeinput">clc;clear;
+
+nrocket = 1; <span class="comment">% Number of rockets to be simulated at a time</span>
+end_time = 12; <span class="comment">% In seconds</span>
+step_size = 0.01; <span class="comment">% Simulation Step size</span>
+endtime = end_time/step_size;
+
+<span class="comment">% Have to check what realistic values actually are here, These are ...</span>
+    <span class="comment">% randomized</span>
+disturbance = zeros([nrocket nrocket 3]);<span class="comment">%normrnd(5,10,[nrocket nrocket 3]); % Force the step disturbance that the ...</span>
+    <span class="comment">% rocket has on it  change to randn</span>
+moment_inertia = abs(normrnd(21,5,[nrocket nrocket])); <span class="comment">% Kg m^2</span>
+delta_spring = abs(normrnd(0.1,0.0025,[nrocket nrocket])); <span class="comment">% N m/rad</span>
+delta_damping = abs(normrnd(5.8,1,[nrocket nrocket]));<span class="comment">%abs(normrnd(2,1,[nrocket nrocket])); %{abs(normrnd(.00005,.00005,[nrocket nrocket])); % N m/rad^s</span>
+delta_inertia = abs(normrnd(0.0003,0.000015,[nrocket nrocket])); <span class="comment">% KG m^2</span>
+
+<span class="comment">% These values start at zero due to zero initial velocity, once the ...</span>
+    <span class="comment">% rocket starts they increase by previously generated random delta</span>
+    <span class="comment">% values.</span>
+damping = zeros(nrocket);
+spring = zeros(nrocket);
+
+thrust = 1000; <span class="comment">% Newtons</span>
+
+angle_motor = zeros([nrocket nrocket 3]);
+
+time = zeros([nrocket nrocket 3]);
+
+moment = zeros([nrocket nrocket 3]); <span class="comment">% Moment created by the control    system</span>
+velocity_actuator = 0.1; <span class="comment">% m/s how fat the actuator moves</span>
+actuator_distance = 0.6096; <span class="comment">% Distance of actuators to the pivot position</span>
+center_mass = 1; <span class="comment">% Center of mass away from the bottom of the rocket</span>
+
+angular_acceleration = zeros([nrocket nrocket 3]); <span class="comment">% rad/s^2</span>
+
+angular_int_velocity = zeros([nrocket nrocket 3]);
+angular_velocity = zeros([nrocket nrocket 3]); <span class="comment">% rad/s</span>
+
+angle_int_rocket = zeros([nrocket nrocket 3]);
+angle_rocket = zeros([nrocket nrocket 3]); <span class="comment">% In radians</span>
+</pre><h2>No control system implemented values<a name="2"></a></h2><pre class="codeinput">no_angular_acceleration = zeros([nrocket nrocket 3]); <span class="comment">% rad/s^2</span>
+
+no_angular_int_velocity = zeros([nrocket nrocket 3]);
+no_angular_velocity = zeros([nrocket nrocket 3]); <span class="comment">% rad/s</span>
+
+no_angle_int_rocket = zeros([nrocket nrocket 3]);
+no_angle_rocket = zeros([nrocket nrocket 3]); <span class="comment">% In radians</span>
+</pre><h2>These Values are to be used for the control algorith only...............<a name="3"></a></h2><p>........................................................................</p><pre class="codeinput">desired_angle = zeros(nrocket); <span class="comment">% Desired angle of motor casing in radians</span>
+desired_rocket = zeros(nrocket); <span class="comment">% Desired angle of the rocket</span>
+
+<span class="comment">% Moline's Predictor-Corrector Method is going to be used</span>
+predicted_velocity1 = zeros(nrocket);
+predicted_derivitive = zeros(nrocket);
+predicted_velocity = zeros(nrocket);
+
+angle = zeros(nrocket);
+
+<span class="comment">% Not all might end up being used</span>
+velocity = zeros(nrocket);
+velocity1 = zeros(nrocket);
+velocity2 = zeros(nrocket);
+velocity3 = zeros(nrocket);
+velocity4 = zeros(nrocket);
+
+<span class="comment">% Not all might end up being used</span>
+derivitive3 = zeros(nrocket);
+derivitive2 = zeros(nrocket);
+derivitive1 = zeros(nrocket);
+derivitive = zeros(nrocket);
+
+
+
+<span class="keyword">for</span> n = 3:endtime+3
+</pre><h2>Changes over time<a name="4"></a></h2><p>The moment of inertia decreases over time due to fuel spent. Damping and spring coefficients increase over time since the rockets velocity increases over time.</p><pre class="codeinput">    <span class="comment">% Start of rocket behaviour...........................................</span>
+    <span class="comment">% These variables change every second Randomly determined by how ...</span>
+        <span class="comment">% much earlier</span>
+    damping = step_size*delta_damping + damping;
+    spring = step_size*delta_spring + spring;
+    moment_inertia = moment_inertia - delta_inertia*step_size;
+    time(:,:,n) = time(:,:,n-1) + step_size;
+
+    y = normrnd(0,1,[nrocket nrocket]);
+    disturbance(:,:,n) = disturbance(:,:,n-1);
+
+    B = (y&gt;0);
+
+    disturbance(:,:,n) = B.*normrnd(0,.05,[nrocket nrocket])+disturbance(:,:,n-1); <span class="comment">% Randomize the ...</span>
+            <span class="comment">% disturbance a lil throuought the simulation</span>
+</pre><h2>Angular Acceleration<a name="5"></a></h2><p><img src="randomwalk_eq10951400243170032430.png" alt="$$\ddot{\theta}_n = \frac{M + U - D*\dot{\theta}_{n-1} - K*\theta_{n-1}}{I}$"></p><pre class="codeinput">    angular_acceleration(:,:,n) = (moment(:,:,n-1) + disturbance(:,:,n) - <span class="keyword">...</span>
+        (angular_velocity(:,:,n-1).*damping) - <span class="keyword">...</span>
+        (angle_rocket(:,:,n-1).*spring))./moment_inertia;
+</pre><h2>Angular Velocity<a name="6"></a></h2><p><img src="randomwalk_eq12473285590817877667.png" alt="$$\dot{\theta}_{n} = \frac{\ddot{\theta}_{n}*h}{2} + \dot{\theta}^{int}_{n-1}$"></p><p><img src="randomwalk_eq05038742795439101758.png" alt="$$dot{\theta}^{int}_{n} = \frac{\ddot{\theta}_{n}*h}{2} + \dot{\theta}^{int}_{n-1}$"></p><p>Numerical integration using Trapezoidal method. Used to possibly compare with what is used in predictor-corrector algorithm. It symbolizez what the gyroscope readings are.</p><pre class="codeinput">    angular_velocity(:,:,n) = angular_acceleration(:,:,n)*step_size/2 <span class="keyword">...</span>
+        + angular_int_velocity(:,:,n-1);
+    angular_int_velocity(:,:,n) = <span class="keyword">...</span>
+        angular_acceleration(:,:,n)*step_size<span class="keyword">...</span>
+        + angular_int_velocity(:,:,n-1);
+</pre><h2>Angle of the rocket<a name="7"></a></h2><p><img src="randomwalk_eq06533677188783490125.png" alt="$$\theta_{n} = \frac{\dot{\theta}_{n}*h}{2} + \theta^{int}_{n-1}$"></p><p><img src="randomwalk_eq18039805404322569231.png" alt="$$\theta^{int}_{n} = \frac{\dot{\theta}_{n}*h}{2} + \theta^{int}_{n-1}$"></p><p>Numerical integration using Trapezoidal Method. Used to possibly compare with what is used in predictor-corrector algorithm</p><pre class="codeinput">    angle_rocket(:,:,n) = angular_velocity(:,:,n)*step_size/2 <span class="keyword">...</span>
+        + angle_int_rocket(:,:,n-1);
+    angle_int_rocket(:,:,n) = angular_velocity(:,:,n)*step_size <span class="keyword">...</span>
+        + angle_int_rocket(:,:,n-1);
+
+    <span class="comment">% End of behaviour of rocket..........................................</span>
+    <span class="comment">% ....................................................................</span>
+</pre><h2>Compare with no control system<a name="8"></a></h2><p>The same equations are used except ignoring the moment term therefore I will not comment this</p><pre class="codeinput">    no_angular_acceleration(:,:,n) = (disturbance(:,:,n) - <span class="keyword">...</span>
+        (no_angular_velocity(:,:,n-1).*damping) - <span class="keyword">...</span>
+        (no_angle_rocket(:,:,n-1).*spring))./moment_inertia;
+
+    no_angular_velocity(:,:,n) = no_angular_acceleration(:,:,n)*step_size/2 <span class="keyword">...</span>
+        + no_angular_int_velocity(:,:,n-1);
+    no_angular_int_velocity(:,:,n) = <span class="keyword">...</span>
+        no_angular_acceleration(:,:,n)*step_size<span class="keyword">...</span>
+        + no_angular_int_velocity(:,:,n-1);
+
+    no_angle_rocket(:,:,n) = no_angular_velocity(:,:,n)*step_size/2 <span class="keyword">...</span>
+        + no_angle_int_rocket(:,:,n-1);
+    no_angle_int_rocket(:,:,n) = no_angular_velocity(:,:,n)*step_size <span class="keyword">...</span>
+        + no_angle_int_rocket(:,:,n-1);
+</pre><h2>Control Algorithm<a name="9"></a></h2><p><tt>Insert control algorithm here it is to be as close to what to put into raspberry pi as possible AKA dont use values used before, except the angular velocity since that is what gyroscope is reading</tt></p><pre class="codeinput">    <span class="comment">% Some might not be used at all</span>
+    velocity4 = velocity3;
+    velocity3 = velocity2;
+    velocity2 = velocity1;
+    velocity1 = velocity;
+
+    velocity = angular_velocity(:,:,n); <span class="comment">% What the gyroscope would spit out</span>
+    angle = angle + velocity*step_size; <span class="comment">% Current angle of the rocket</span>
+
+    <span class="comment">% Some might not be used at all</span>
+    derivitive3 = derivitive2;
+    derivitive2 = derivitive1;
+    derivitive1 = derivitive;
+    derivitive = (velocity - velocity1)/(2*step_size); <span class="comment">% Angular ...</span>
+        <span class="comment">% Acceleration of the rocket</span>
+</pre><h2>Predictor-Corrector Miline's Method<a name="10"></a></h2><p>Page 404 in "Computer Methods for Engineers with Matlab Applications" by Yogesh Jaluria</p><p><b>Predictor-Corrector Miline's Method Can you look at this I think I might have mixed something up.</b></p><p><img src="randomwalk_eq17005363820873821825.png" alt="$$ \dot{\theta}^{ap'}_{n+1} = \dot{\theta}^{a}_{n-3} + \frac{4*h}{3} *(2*\ddot{\theta}^{a}_{n} - \ddot{\theta}^{a}_{n-1} + 2*\ddot{\theta}^{a}_{n-2})$"></p><pre class="codeinput">    predicted_velocity1 = velocity3 + ((4/3)*step_size)*<span class="keyword">...</span>
+        (2*derivitive - derivitive1 + 2*derivitive2);
+</pre><p><img src="randomwalk_eq14631235184243859300.png" alt="$$\ddot{\theta}^{ap'}_{n+1} = \frac{\dot{\theta}^{ap'}_{n+1} - \dot{\theta}^{a}_{n}}{2*h}$"></p><pre class="codeinput">    predicted_derivitive1 = (predicted_velocity1 - velocity)/(2*step_size);
+</pre><p><img src="randomwalk_eq15758327814458661855.png" alt="$$ \dot{\theta}^{ap}_{n+1} = \dot{\theta}^{a}_{n-1} + \frac{h}{3}*(\ddot{\theta}^{a}_{n-1} + 4*\ddot{\theta}^{a}_{n} + \ddot{\theta}^{ap'}_{n+1})$"></p><p>Predicted Velocity this is prob the most accurate prediction since it goes off of what the readings are given</p><pre class="codeinput">    predicted_velocity = velocity1 + (step_size/3)*(derivitive1 + <span class="keyword">...</span>
+        4 * derivitive + predicted_derivitive1);
+</pre><p><img src="randomwalk_eq04100046104320943730.png" alt="$$ \theta^{ap}_{n+1} = \theta^{a}_{n} + \dot{\theta}^{ap}_{n+1}*h$"></p><pre class="codeinput">    predicted_integral = angle + predicted_velocity*step_size;
+        <span class="comment">% Predicted angle</span>
+</pre><p><img src="randomwalk_eq00725853053758940640.png" alt="$$\ddot{\theta}^{ap}_{n+1} = \frac{\dot{\theta}^{ap}_{n+1} - \dot{\theta}^{a}_{n}}{2*h}$"></p><pre class="codeinput">    predicted_derivitive = (predicted_velocity - velocity)/(2*step_size);
+        <span class="comment">% Predicted acceleration</span>
+</pre><h2>Moment Created due to Nozzle<a name="15"></a></h2><p>When the control algorithm is going to be created this will change the moment on the rocket.</p><pre class="codeinput">    <span class="comment">% These are basically if statements for the matrixes, use A,B,C to...</span>
+        <span class="comment">% do the rewuired arithmetic after</span>
+    A = (predicted_integral==desired_rocket);
+    B = (predicted_integral&gt;desired_rocket);
+    C = (predicted_integral&lt;desired_rocket);
+
+
+    desired_angle = A.*0 - B.*(predicted_integral .* 100) + C.*(predicted_integral .* 100);
+
+    <span class="comment">% Still deciding what to put here</span>
+    <span class="comment">% desired_angle = % Desired Angle of motor casing</span>
+
+
+    <span class="comment">% End of control algorithm............................................</span>
+    <span class="comment">% ....................................................................</span>
+
+    <span class="comment">% Start of motor casing change of moment calculations.................</span>
+    <span class="comment">% is equal</span>
+
+<span class="comment">    %{
+</span><span class="comment">    A = (desired_angle == angle_motor(:,:,n-1));
+</span><span class="comment">    B = (desired_angle &gt; angle_motor(:,:,n-1));
+</span><span class="comment">    C = (desired_angle &lt; angle_motor(:,:,n-1));
+</span><span class="comment">    %}
+</span>
+    <span class="comment">%angle_motor(:,:,n) = angle_motor(:,:,n-1) + (velocity_actuator* ...    % Terrible way it can easily overshoot.</span>
+     <span class="comment">%   step_size*B - velocity_actuator* step_size*C); % Linear acuator ...</span>
+        <span class="comment">% moving at the rate to the desired angle. Might never reach it ...</span>
+        <span class="comment">% depending on what the algorithm says</span>
+
+
+    moment(:,:,n) = sin(desired_angle) .* thrust; <span class="comment">% Calculating the ...</span>
+        <span class="comment">% moment created by the thrust on the rocket</span>
+    <span class="comment">% End of motor casing change of moment calculations...................</span>
+    <span class="comment">% ....................................................................</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><h2>Plotting<a name="17"></a></h2><pre class="codeinput">a = size(angle_rocket);
+a = a(1,3,1);
+figure(1);
+clf;
+xlabel(<span class="string">'Time step'</span>);
+ylabel(<span class="string">'Angle (Rad)'</span>);
+title(<span class="string">'Angle of the Rocket'</span>);
+<span class="comment">%axis([0 endtime -.1 .1]);</span>
+hold <span class="string">on</span>;
+x = 1:a;
+<span class="keyword">for</span> i = 1:nrocket
+    <span class="keyword">for</span> j = 1:nrocket
+        <span class="keyword">for</span> n = 1:a
+            y(1,n) = angle_rocket(i,j,n);
+        <span class="keyword">end</span>
+        plot(x,y);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">%{
+</span><span class="comment">figure(2);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Angular Velocity (Rad/2)');
+</span><span class="comment">title('Angular Velocity  of the Rocket');
+</span><span class="comment">axis([0 1403 -0.05 0.05]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = angular_velocity(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">figure(3);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Angular Acceleration(Rad/2)');
+</span><span class="comment">title('Angular Acceleration of the Rocket');
+</span><span class="comment">axis([0 1403 -.05 .05]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = angular_acceleration(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">figure(4);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Disturbance (N)');
+</span><span class="comment">title('Disturbance on the rocket');
+</span><span class="comment">axis([0 endtime -1 1]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = disturbance(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">%}
+</span>
+
+a = size(angle_rocket);
+a = a(1,3,1);
+figure(5);
+clf;
+xlabel(<span class="string">'Time step'</span>);
+ylabel(<span class="string">'Angle (Rad)'</span>);
+title(<span class="string">'Angle of the Rocket Without Sontrol System'</span>);
+<span class="comment">%axis([0 endtime -.1 .1]);</span>
+hold <span class="string">on</span>;
+x = 1:a;
+<span class="keyword">for</span> i = 1:nrocket
+    <span class="keyword">for</span> j = 1:nrocket
+        <span class="keyword">for</span> n = 1:a
+            y(1,n) = no_angle_rocket(i,j,n);
+        <span class="keyword">end</span>
+        plot(x,y);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">%{
+</span><span class="comment">figure(6);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Angular Velocity (Rad/2)');
+</span><span class="comment">title('Angular Velocity  of the Rocket without control system');
+</span><span class="comment">axis([0 1403 -0.05 0.05]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = no_angular_velocity(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">figure(7);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Angular Acceleration(Rad/2)');
+</span><span class="comment">title('Angular Acceleration of the Rocket with no control system');
+</span><span class="comment">axis([0 1403 -.05 .05]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = no_angular_acceleration(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">
+</span><span class="comment">
+</span><span class="comment">figure(8);
+</span><span class="comment">clf;
+</span><span class="comment">xlabel('Time step');
+</span><span class="comment">ylabel('Disturbance (N)');
+</span><span class="comment">title('Disturbance on the rocket');
+</span><span class="comment">axis([0 endtime -1 1]);
+</span><span class="comment">hold on;
+</span><span class="comment">x = 1:a;
+</span><span class="comment">for i = 1:nrocket
+</span><span class="comment">    for j = 1:nrocket
+</span><span class="comment">        for n = 1:a
+</span><span class="comment">            y(1,n) = disturbance(i,j,n);
+</span><span class="comment">        end
+</span><span class="comment">        plot(x,y);
+</span><span class="comment">    end
+</span><span class="comment">end
+</span><span class="comment">%}</span>
+</pre><img vspace="5" hspace="5" src="randomwalk_01.png" alt=""> <img vspace="5" hspace="5" src="randomwalk_02.png" alt=""> <h2>Saving for graphical simulation<a name="18"></a></h2><p>The graphics use program called processing</p><pre class="codeinput">k = 7;
+
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\angle'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],angle_rocket);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\velocity'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],angular_velocity);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\acceleration'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],angular_acceleration);
+
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\damping'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_damping);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\spring'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_spring);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\inertia'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],moment_inertia);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\delinertia'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_inertia);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\disturbance'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],disturbance);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\damping'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_damping);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\spring'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_spring);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\inertia'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],moment_inertia);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\delinertia'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],delta_inertia);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\disturbance'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],disturbance);
+
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\angle'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],no_angle_rocket);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\velocity'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],no_angular_velocity);
+csvwrite([<span class="string">'C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\acceleration'</span>,sprintf(<span class="string">'%d'</span>,k),<span class="string">'.txt'</span>],no_angular_acceleration);
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Random Walk, Angle of the Rocket Simulation
+% So this has to use a monte carlo based predictor-corrector method control
+% System simulation in order to check the algorithm. The random parameters
+% Should be moment of inertia, damping, spring constants and initial and
+% continous disturbance. The only constantly randomly changing variable is 
+% the continous disturbance. The rest change constantly with the same 
+% variable which is chosen randomly.  The predictor-corrector algorithm is 
+% to keep the path as close to vertical as possible.
+% 
+%
+% The variables are defined as:
+% 
+% $$h -$ Step Size
+%
+% $$n -$ Iteration number
+%
+% $$\theta -$ Angle of the rocket
+%
+% $$\theta^{int} -$ Angle of the rocket used for integration
+%
+% $$\dot{\theta} -$ Angular velocity of the rocket 
+%
+% $$\dot{\theta}^{int} -$ Angular Velocity used for integration
+%
+% $$\ddot{\theta} -$ Angular Acceleration of the rocket
+%
+% $$I -$ Moment of Inertia of the rocket 
+%
+% $$M -$ Moment created due to motor casing angle 
+%
+% $$U -$ Moment created due to disturbances 
+%
+% $$D -$ Damping Coefficient 
+%
+% $$K -$ Spring Coefficient 
+%
+% $$Superscipt a -$ Variables that are used in control algorithm 
+%
+% $$Superscript p' -$ First Prediction in Molines Method
+% 
+% $$Superscript p -$ Improved Prediction 
+
+%% Initialize
+% Some variables are randomized some are all zeros.
+
+clc;clear;
+
+nrocket = 1; % Number of rockets to be simulated at a time
+end_time = 12; % In seconds
+step_size = 0.01; % Simulation Step size
+endtime = end_time/step_size; 
+
+% Have to check what realistic values actually are here, These are ...
+    % randomized 
+disturbance = zeros([nrocket nrocket 3]);%normrnd(5,10,[nrocket nrocket 3]); % Force the step disturbance that the ...
+    % rocket has on it  change to randn
+moment_inertia = abs(normrnd(21,5,[nrocket nrocket])); % Kg m^2
+delta_spring = abs(normrnd(0.1,0.0025,[nrocket nrocket])); % N m/rad
+delta_damping = abs(normrnd(5.8,1,[nrocket nrocket]));%abs(normrnd(2,1,[nrocket nrocket])); %{abs(normrnd(.00005,.00005,[nrocket nrocket])); % N m/rad^s
+delta_inertia = abs(normrnd(0.0003,0.000015,[nrocket nrocket])); % KG m^2
+
+% These values start at zero due to zero initial velocity, once the ...
+    % rocket starts they increase by previously generated random delta
+    % values.
+damping = zeros(nrocket);
+spring = zeros(nrocket);
+
+thrust = 1000; % Newtons
+
+angle_motor = zeros([nrocket nrocket 3]); 
+
+time = zeros([nrocket nrocket 3]);
+
+moment = zeros([nrocket nrocket 3]); % Moment created by the control    system
+velocity_actuator = 0.1; % m/s how fat the actuator moves
+actuator_distance = 0.6096; % Distance of actuators to the pivot position
+center_mass = 1; % Center of mass away from the bottom of the rocket
+
+angular_acceleration = zeros([nrocket nrocket 3]); % rad/s^2
+
+angular_int_velocity = zeros([nrocket nrocket 3]);
+angular_velocity = zeros([nrocket nrocket 3]); % rad/s
+
+angle_int_rocket = zeros([nrocket nrocket 3]);
+angle_rocket = zeros([nrocket nrocket 3]); % In radians
+
+%% No control system implemented values
+%
+%
+
+no_angular_acceleration = zeros([nrocket nrocket 3]); % rad/s^2
+
+no_angular_int_velocity = zeros([nrocket nrocket 3]);
+no_angular_velocity = zeros([nrocket nrocket 3]); % rad/s
+
+no_angle_int_rocket = zeros([nrocket nrocket 3]);
+no_angle_rocket = zeros([nrocket nrocket 3]); % In radians
+
+%% These Values are to be used for the control algorith only...............
+% ........................................................................
+desired_angle = zeros(nrocket); % Desired angle of motor casing in radians 
+desired_rocket = zeros(nrocket); % Desired angle of the rocket
+
+% Moline's Predictor-Corrector Method is going to be used
+predicted_velocity1 = zeros(nrocket); 
+predicted_derivitive = zeros(nrocket); 
+predicted_velocity = zeros(nrocket);
+
+angle = zeros(nrocket);
+
+% Not all might end up being used
+velocity = zeros(nrocket);
+velocity1 = zeros(nrocket);
+velocity2 = zeros(nrocket);
+velocity3 = zeros(nrocket);
+velocity4 = zeros(nrocket);
+
+% Not all might end up being used
+derivitive3 = zeros(nrocket);
+derivitive2 = zeros(nrocket);
+derivitive1 = zeros(nrocket);
+derivitive = zeros(nrocket);
+
+
+
+for n = 3:endtime+3 
+        %% Changes over time
+        % The moment of inertia decreases over time due to fuel spent. 
+        % Damping and spring coefficients increase over time since the rockets
+        % velocity increases over time.
+    
+    
+    % Start of rocket behaviour...........................................
+    % These variables change every second Randomly determined by how ...
+        % much earlier 
+    damping = step_size*delta_damping + damping;
+    spring = step_size*delta_spring + spring;
+    moment_inertia = moment_inertia - delta_inertia*step_size;
+    time(:,:,n) = time(:,:,n-1) + step_size;
+    
+    y = normrnd(0,1,[nrocket nrocket]);
+    disturbance(:,:,n) = disturbance(:,:,n-1);
+    
+    B = (y>0);
+    
+    disturbance(:,:,n) = B.*normrnd(0,.05,[nrocket nrocket])+disturbance(:,:,n-1); % Randomize the ...
+            % disturbance a lil throuought the simulation
+    
+            %% Angular Acceleration
+            % 
+            % $$\ddot{\theta}_n = \frac{M + U - D*\dot{\theta}_{n-1} - K*\theta_{n-1}}{I}$
+            % 
+            %
+            
+    angular_acceleration(:,:,n) = (moment(:,:,n-1) + disturbance(:,:,n) - ...
+        (angular_velocity(:,:,n-1).*damping) - ...
+        (angle_rocket(:,:,n-1).*spring))./moment_inertia;
+           
+            %% Angular Velocity
+            % 
+            % $$\dot{\theta}_{n} = \frac{\ddot{\theta}_{n}*h}{2} +
+            % \dot{\theta}^{int}_{n-1}$
+            %
+            % $$dot{\theta}^{int}_{n} = \frac{\ddot{\theta}_{n}*h}{2} +
+            % \dot{\theta}^{int}_{n-1}$
+            %
+            % Numerical integration using Trapezoidal method. Used to possibly compare with what is used in
+            % predictor-corrector algorithm. It symbolizez what the
+            % gyroscope readings are.
+            %
+            
+    angular_velocity(:,:,n) = angular_acceleration(:,:,n)*step_size/2 ...
+        + angular_int_velocity(:,:,n-1);
+    angular_int_velocity(:,:,n) = ...
+        angular_acceleration(:,:,n)*step_size...
+        + angular_int_velocity(:,:,n-1);
+           
+            %% Angle of the rocket
+            % 
+            % $$\theta_{n} = \frac{\dot{\theta}_{n}*h}{2} +
+            % \theta^{int}_{n-1}$
+            %
+            % $$\theta^{int}_{n} = \frac{\dot{\theta}_{n}*h}{2} +
+            % \theta^{int}_{n-1}$
+            %
+            % Numerical integration using Trapezoidal Method. Used to possibly compare with what 
+            % is used in predictor-corrector algorithm
+            %
+     
+    
+    angle_rocket(:,:,n) = angular_velocity(:,:,n)*step_size/2 ...
+        + angle_int_rocket(:,:,n-1);      
+    angle_int_rocket(:,:,n) = angular_velocity(:,:,n)*step_size ...
+        + angle_int_rocket(:,:,n-1);
+            
+    % End of behaviour of rocket..........................................
+    % ....................................................................
+    
+    %% Compare with no control system
+    % The same equations are used except ignoring the moment term therefore
+    % I will not comment this
+    %
+    %
+            
+    no_angular_acceleration(:,:,n) = (disturbance(:,:,n) - ...
+        (no_angular_velocity(:,:,n-1).*damping) - ...
+        (no_angle_rocket(:,:,n-1).*spring))./moment_inertia;
+          
+    no_angular_velocity(:,:,n) = no_angular_acceleration(:,:,n)*step_size/2 ...
+        + no_angular_int_velocity(:,:,n-1);
+    no_angular_int_velocity(:,:,n) = ...
+        no_angular_acceleration(:,:,n)*step_size...
+        + no_angular_int_velocity(:,:,n-1);
+   
+    no_angle_rocket(:,:,n) = no_angular_velocity(:,:,n)*step_size/2 ...
+        + no_angle_int_rocket(:,:,n-1);      
+    no_angle_int_rocket(:,:,n) = no_angular_velocity(:,:,n)*step_size ...
+        + no_angle_int_rocket(:,:,n-1);
+    
+        %% Control Algorithm
+        %
+        % |Insert control algorithm here it is to be as close to what to 
+        % put into raspberry pi as possible AKA dont use values used
+        % before, except the angular velocity since that is what gyroscope 
+        % is reading|
+        %
+        
+    % Some might not be used at all
+    velocity4 = velocity3;
+    velocity3 = velocity2;
+    velocity2 = velocity1;
+    velocity1 = velocity;
+    
+    velocity = angular_velocity(:,:,n); % What the gyroscope would spit out
+    angle = angle + velocity*step_size; % Current angle of the rocket
+    
+    % Some might not be used at all
+    derivitive3 = derivitive2;
+    derivitive2 = derivitive1;
+    derivitive1 = derivitive;
+    derivitive = (velocity - velocity1)/(2*step_size); % Angular ...
+        % Acceleration of the rocket 
+    %% Predictor-Corrector Miline's Method 
+    % Page 404 in "Computer Methods for Engineers with Matlab Applications"
+    % by Yogesh Jaluria
+    %
+    % *Predictor-Corrector Miline's Method Can you look at this I think I
+    % might have mixed something up.*
+    %  
+    % $$ \dot{\theta}^{ap'}_{n+1} = \dot{\theta}^{a}_{n-3} + \frac{4*h}{3}
+    % *(2*\ddot{\theta}^{a}_{n} -
+    % \ddot{\theta}^{a}_{n-1} + 2*\ddot{\theta}^{a}_{n-2})$
+    %
+    %
+    
+    predicted_velocity1 = velocity3 + ((4/3)*step_size)*...
+        (2*derivitive - derivitive1 + 2*derivitive2);   
+    
+    %%
+    % 
+    % $$\ddot{\theta}^{ap'}_{n+1} = \frac{\dot{\theta}^{ap'}_{n+1} -
+    % \dot{\theta}^{a}_{n}}{2*h}$
+    %
+    predicted_derivitive1 = (predicted_velocity1 - velocity)/(2*step_size);
+    
+    
+    %%
+    %
+    % $$ \dot{\theta}^{ap}_{n+1} = \dot{\theta}^{a}_{n-1} +
+    % \frac{h}{3}*(\ddot{\theta}^{a}_{n-1} + 4*\ddot{\theta}^{a}_{n} +
+    % \ddot{\theta}^{ap'}_{n+1})$
+    %
+    % Predicted Velocity this is prob the most accurate prediction
+    % since it goes off of what the readings are given
+    
+    predicted_velocity = velocity1 + (step_size/3)*(derivitive1 + ...
+        4 * derivitive + predicted_derivitive1);
+        
+    %%
+    %
+    % $$ \theta^{ap}_{n+1} = \theta^{a}_{n} + \dot{\theta}^{ap}_{n+1}*h$
+    %
+    predicted_integral = angle + predicted_velocity*step_size;
+        % Predicted angle
+        
+    %%
+    %
+    % $$\ddot{\theta}^{ap}_{n+1} = \frac{\dot{\theta}^{ap}_{n+1} -
+    % \dot{\theta}^{a}_{n}}{2*h}$
+    %
+    
+    predicted_derivitive = (predicted_velocity - velocity)/(2*step_size);
+        % Predicted acceleration
+        
+        
+    %% Moment Created due to Nozzle
+    % When the control algorithm is going to be created this will change
+    % the moment on the rocket.
+    
+    % These are basically if statements for the matrixes, use A,B,C to...
+        % do the rewuired arithmetic after
+    A = (predicted_integral==desired_rocket);
+    B = (predicted_integral>desired_rocket);
+    C = (predicted_integral<desired_rocket);
+    
+    
+    desired_angle = A.*0 - B.*(predicted_integral .* 100) + C.*(predicted_integral .* 100);
+    
+    % Still deciding what to put here
+    % desired_angle = % Desired Angle of motor casing 
+    
+    
+    % End of control algorithm............................................
+    % ....................................................................
+    
+    % Start of motor casing change of moment calculations.................
+    % is equal
+    
+    %{
+    A = (desired_angle == angle_motor(:,:,n-1));
+    B = (desired_angle > angle_motor(:,:,n-1));
+    C = (desired_angle < angle_motor(:,:,n-1));
+    %}
+    
+    %angle_motor(:,:,n) = angle_motor(:,:,n-1) + (velocity_actuator* ...    % Terrible way it can easily overshoot. 
+     %   step_size*B - velocity_actuator* step_size*C); % Linear acuator ...
+        % moving at the rate to the desired angle. Might never reach it ...
+        % depending on what the algorithm says
+    
+    
+    moment(:,:,n) = sin(desired_angle) .* thrust; % Calculating the ...
+        % moment created by the thrust on the rocket
+    % End of motor casing change of moment calculations...................
+    % ....................................................................
+end
+
+%% Plotting
+% 
+
+a = size(angle_rocket);
+a = a(1,3,1);
+figure(1);
+clf;
+xlabel('Time step');
+ylabel('Angle (Rad)');
+title('Angle of the Rocket');
+%axis([0 endtime -.1 .1]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = angle_rocket(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+%{
+figure(2);
+clf;
+xlabel('Time step');
+ylabel('Angular Velocity (Rad/2)');
+title('Angular Velocity  of the Rocket');
+axis([0 1403 -0.05 0.05]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = angular_velocity(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+
+
+figure(3);
+clf;
+xlabel('Time step');
+ylabel('Angular Acceleration(Rad/2)');
+title('Angular Acceleration of the Rocket');
+axis([0 1403 -.05 .05]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = angular_acceleration(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+
+
+figure(4);
+clf;
+xlabel('Time step');
+ylabel('Disturbance (N)');
+title('Disturbance on the rocket');
+axis([0 endtime -1 1]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = disturbance(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+%}
+
+
+a = size(angle_rocket);
+a = a(1,3,1);
+figure(5);
+clf;
+xlabel('Time step');
+ylabel('Angle (Rad)');
+title('Angle of the Rocket Without Sontrol System');
+%axis([0 endtime -.1 .1]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = no_angle_rocket(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+%{
+figure(6);
+clf;
+xlabel('Time step');
+ylabel('Angular Velocity (Rad/2)');
+title('Angular Velocity  of the Rocket without control system');
+axis([0 1403 -0.05 0.05]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = no_angular_velocity(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+
+
+figure(7);
+clf;
+xlabel('Time step');
+ylabel('Angular Acceleration(Rad/2)');
+title('Angular Acceleration of the Rocket with no control system');
+axis([0 1403 -.05 .05]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = no_angular_acceleration(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+
+
+figure(8);
+clf;
+xlabel('Time step');
+ylabel('Disturbance (N)');
+title('Disturbance on the rocket');
+axis([0 endtime -1 1]);
+hold on;
+x = 1:a;
+for i = 1:nrocket
+    for j = 1:nrocket
+        for n = 1:a
+            y(1,n) = disturbance(i,j,n);
+        end
+        plot(x,y);
+    end
+end
+%}
+
+
+%% Saving for graphical simulation
+% The graphics use program called processing
+%
+k = 7;
+
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\angle',sprintf('%d',k),'.txt'],angle_rocket);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\velocity',sprintf('%d',k),'.txt'],angular_velocity);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\acceleration',sprintf('%d',k),'.txt'],angular_acceleration);
+
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\damping',sprintf('%d',k),'.txt'],delta_damping);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\spring',sprintf('%d',k),'.txt'],delta_spring);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\inertia',sprintf('%d',k),'.txt'],moment_inertia);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\delinertia',sprintf('%d',k),'.txt'],delta_inertia);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\rocket\data\disturbance',sprintf('%d',k),'.txt'],disturbance);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\damping',sprintf('%d',k),'.txt'],delta_damping);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\spring',sprintf('%d',k),'.txt'],delta_spring);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\inertia',sprintf('%d',k),'.txt'],moment_inertia);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\delinertia',sprintf('%d',k),'.txt'],delta_inertia);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\disturbance',sprintf('%d',k),'.txt'],disturbance);
+
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\angle',sprintf('%d',k),'.txt'],no_angle_rocket);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\velocity',sprintf('%d',k),'.txt'],no_angular_velocity);
+csvwrite(['C:\Users\Maciej\Google Drive\Senior design\Simulation\Nocontrol\data\acceleration',sprintf('%d',k),'.txt'],no_angular_acceleration);
+
+
+
+##### SOURCE END #####
+--></body></html>
